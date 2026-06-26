@@ -1,11 +1,26 @@
+use clap::Parser;
 use std::fs::File;
 use std::io::{BufRead, BufReader, Write};
 
+#[derive(Parser)]
+#[command(version, about, long_about = None)]
+struct Options {
+    
+    /// The input file
+    #[arg(short, long)]
+    input: String,
+
+    /// The number of lines per chunk
+    #[arg(short, long)]
+    lines: usize,
+
+}
+
 fn main() {
 
-    let input = "second_test";
+    let args = Options::parse();
 
-    let file = File::open(input);
+    let file = File::open(&args.input);
 
     let file_reader = match file {
         Ok(file) => BufReader::new(file),
@@ -21,7 +36,7 @@ fn main() {
         }
     }
 
-    let mut log_size = 5;
+    let mut log_size = args.lines;
 
     if log_size > forest.len() {
         log_size = forest.len();
@@ -42,14 +57,14 @@ fn main() {
         // Add the lengh of the log to j, subtract 1 so it equals the line value
         j += log.len() - 1;
         // Find the position of the period in the input file name, if there is one
-        let period_index = match input.find(".") {
+        let period_index = match args.input.find(".") {
             Some(index) => index,
-            None => input.len(),
+            None => args.input.len(),
         };
         // The output name is everything up to the period index
-        let output_name = &input[..period_index];
+        let output_name = &args.input[..period_index];
         // The output extension is everything after and including the period index
-        let output_extension = &input[period_index..];
+        let output_extension = &args.input[period_index..];
         // Format the output name to include the original file name, the included line range, and
         // original extension if there was one
         let output_file = format!("{}_{}-{}{}", output_name, i, j, output_extension);

@@ -2,7 +2,7 @@ use clap::Parser;
 use std::fs::File;
 use std::io::{BufRead, BufReader, Write};
 use std::path::Path;
-use std::process::Command;
+use std::process::{Command, ExitCode};
 
 #[derive(Parser)]
 #[command(version, about, long_about = None)]
@@ -18,7 +18,7 @@ struct Options {
 
 }
 
-fn main() {
+fn main() -> ExitCode {
     // Parse the command line arguments
     let args = Options::parse();
 
@@ -106,4 +106,6 @@ fn main() {
         // Set i to j so the next loop starts where this one ended
         i = j
     }
+
+    ExitCode::from(0)
 }

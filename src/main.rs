@@ -87,7 +87,7 @@ fn manage_destination(input_file: &str) -> String {
     let input_name = &input_file[..period_index];
 
     // Destination directory includes the input file name for ease of location
-    let mill = String::from("./") + input_name + &String::from("_divided/");
+    let mill = String::from("./") + input_name + &String::from("_chopped/");
     
     // If the directory already exists, do nothing
     if Path::new(&mill).exists() {

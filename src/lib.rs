@@ -56,8 +56,8 @@ pub fn manage_destination(input_file: &str) -> String {
 
     // If the directory already exists, do nothing
     if Path::new(&mill).exists() {
-    // If the directory does not exist, create it and
-    // wait for creation to finish before moving on
+        // If the directory does not exist, create it and
+        // wait for creation to finish before moving on
     } else {
         let mut create_directory = Command::new("mkdir")
             .arg(&mill)

@@ -1,6 +1,7 @@
 use clap::Parser;
 use lumberjack::{chop_lumber, manage_destination, read_to_vec, size_forest};
 use std::process::ExitCode;
+use std::time::Instant;
 
 #[derive(Parser)]
 #[command(version, about, long_about = None)]
@@ -15,6 +16,9 @@ struct Options {
 }
 
 fn main() -> ExitCode {
+    // Start Benchmarking Timer
+    let shift_start = Instant::now();
+
     // Parse the command line arguments
     let args = Options::parse();
 
@@ -27,7 +31,16 @@ fn main() -> ExitCode {
     // Create output directory if it does not exist
     let mill = manage_destination(&args.input);
 
-    chop_lumber(&args.input, timber, mill);
+    chop_lumber(&args.input, timber.clone(), mill);
+
+    // Finish Benchmarking Timer
+    let shift_duration = shift_start.elapsed();
+    println!(
+        "Chopped {} into {} Logs in {:.2?}",
+        &args.input,
+        timber.len(),
+        shift_duration
+    );
 
     ExitCode::from(0)
 }

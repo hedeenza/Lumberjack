@@ -22,38 +22,11 @@ fn main() -> ExitCode {
     // Parse the command line arguments
     let args = Options::parse();
 
-    // Read in the input file
-    let file = File::open(&args.input);
+    // Read input, collect lines to vector
+    let forest = read_to_vec(&args.input);
 
-    let file_reader = match file {
-        Ok(file) => BufReader::new(file),
-        Err(err) => panic!("[ ERROR ]: {}", err),
-    };
-
-    // Create a vector to contain the original file contents
-    let mut forest: Vec<String> = Vec::new();
-
-    // Push each line to the vector
-    for line in file_reader.lines() {
-        match line {
-            Ok(line) => forest.push(line),
-            Err(err) => println!("[ ERROR ]: {}", err),
-        }
-    }
-
-    // Determine the number of lines to include in each file
-    let mut log_size = args.lines;
-
-    // If the number is larger than the number of lines in the original file,
-    // set it to the number of lines in the original file
-    if log_size > forest.len() {
-        log_size = forest.len();
-    }
-
-    // Break the vector into chunks of the desired size
-    let timber: Vec<&[String]> = forest
-        .chunks(log_size)
-        .collect();
+    // Chunk vector into desired size
+    let timber = size_forest(&args.lines, &forest);
 
     // Create a directory to hold the output
     // Find the position of the period in the input file name, if there is one
@@ -108,4 +81,44 @@ fn main() -> ExitCode {
     }
 
     ExitCode::from(0)
+}
+
+fn read_to_vec(input_file: &str) -> Vec<String> {
+    // Read in the input file
+    let file = File::open(&input_file);
+    let file_reader = match file {
+        Ok(file) => BufReader::new(file),
+        Err(err) => panic!("[ ERROR ]: {}", err),
+    };
+
+    // Create a vector to contain the original file contents
+    let mut forest: Vec<String> = Vec::new();
+
+    // Push each line to the vector
+    for line in file_reader.lines() {
+        match line {
+            Ok(line) => forest.push(line),
+            Err(err) => println!("[ ERROR ]: {}", err),
+        }
+    }
+    forest
+}
+
+fn size_forest<'a>(input_size: &'a usize, forest: &'a Vec<String>) -> Vec<&'a [String]> {
+    // Determine the number of lines to include in each file
+    let mut log_size = input_size;
+
+    // If the number is larger than the number of lines in the original file,
+    // set it to the number of lines in the original file
+    let maximum_size = forest.len();
+    if *log_size > maximum_size {
+        log_size = &maximum_size;
+    }
+
+    // Break the vector into chunks of the desired size
+    let timber: Vec<&[String]> = forest
+        .chunks(*log_size)
+        .collect();
+
+    timber
 }

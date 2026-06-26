@@ -1,11 +1,10 @@
 use clap::Parser;
+use lumberjack::{chop_lumber, manage_destination, read_to_vec, size_forest};
 use std::process::ExitCode;
-use lumberjack::{read_to_vec, size_forest, manage_destination, chop_lumber};
 
 #[derive(Parser)]
 #[command(version, about, long_about = None)]
 struct Options {
-    
     /// The input file
     #[arg(short, long)]
     input: String,
@@ -13,7 +12,6 @@ struct Options {
     /// The number of lines per chunk
     #[arg(short, long)]
     lines: usize,
-
 }
 
 fn main() -> ExitCode {

@@ -5,7 +5,7 @@ use std::process::Command;
 
 pub fn read_to_vec(input_file: &str) -> Vec<String> {
     // Read in the input file
-    let file = File::open(&input_file);
+    let file = File::open(input_file);
     let file_reader = match file {
         Ok(file) => BufReader::new(file),
         Err(err) => panic!("[ ERROR ]: {}", err),
@@ -24,7 +24,7 @@ pub fn read_to_vec(input_file: &str) -> Vec<String> {
     forest
 }
 
-pub fn size_forest<'a>(input_size: &'a usize, forest: &'a Vec<String>) -> Vec<&'a [String]> {
+pub fn size_forest<'a>(input_size: &'a usize, forest: &'a [String]) -> Vec<&'a [String]> {
     // Determine the number of lines to include in each file
     let mut log_size = input_size;
 
@@ -36,9 +36,7 @@ pub fn size_forest<'a>(input_size: &'a usize, forest: &'a Vec<String>) -> Vec<&'
     }
 
     // Break the vector into chunks of the desired size
-    let timber: Vec<&[String]> = forest
-        .chunks(*log_size)
-        .collect();
+    let timber: Vec<&[String]> = forest.chunks(*log_size).collect();
 
     timber
 }
@@ -55,17 +53,16 @@ pub fn manage_destination(input_file: &str) -> String {
 
     // Destination directory includes the input file name for ease of location
     let mill = String::from("./") + input_name + &String::from("_chopped/");
-    
+
     // If the directory already exists, do nothing
     if Path::new(&mill).exists() {
-        ()
-    // If the directory does not exist, create it and 
+    // If the directory does not exist, create it and
     // wait for creation to finish before moving on
     } else {
         let mut create_directory = Command::new("mkdir")
             .arg(&mill)
-            .spawn().
-            expect("Could not create output directory");
+            .spawn()
+            .expect("Could not create output directory");
         let _child = create_directory
             .wait()
             .expect("Could not wait for directory creation");
@@ -97,7 +94,8 @@ pub fn chop_lumber(input_file: &str, timber: Vec<&[String]>, mill: String) {
         // original extension if there was one
         let output_file = format!("{}_{}-{}{}", input_name, i, j, input_extension);
         // Create the output file
-        let mut final_output = File::create(mill.clone() + &output_file).expect("Failed to Create Output File");
+        let mut final_output =
+            File::create(mill.clone() + &output_file).expect("Failed to Create Output File");
         // Write each line in the chunk to the proper output file
         for ring in log {
             let _ = writeln!(final_output, "{}", ring);

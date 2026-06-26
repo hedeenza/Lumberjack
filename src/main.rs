@@ -22,4 +22,14 @@ fn main() {
             }
         }
     }
+
+    let mut log_size = 5;
+
+    if log_size > forest.len() {
+        log_size = forest.len();
+    }
+
+    let timber: Vec<&[String]> = forest
+        .chunks(log_size)
+        .collect();
 }

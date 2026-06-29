@@ -26,38 +26,36 @@ fn main() -> ExitCode {
     // Parse the command line arguments
     let args = Options::parse();
 
+    // Create output directory if it does not exist
+    let mill = manage_destination(&args.input);
+
     // Read input, collect lines to vector
     let mut forest = read_to_vec(&args.input);
 
     // Chunk vector into desired size
     if args.paragraph {
         let timber = paragraph_forest(&mut forest);
-        println!("PARAGRAPH MODE");
-        for paragraph in timber {
-            println!("{:?}", paragraph);
-        }
+        split_lumber(&args.input, timber.clone(), mill);
+        // Finish Benchmarking Timer
+        let shift_duration = shift_start.elapsed();
+        println!(
+            "Chopped {} into {} Logs in {:.2?}",
+            &args.input,
+            timber.len(),
+            shift_duration
+        );
     } else {
-        println!("LINE MODE");
-        // let timber = size_forest(&args.lines, &forest);
+        let timber = size_forest(&args.lines, &forest);
+        chop_lumber(&args.input, timber.clone(), mill);
+        // Finish Benchmarking Timer
+        let shift_duration = shift_start.elapsed();
+        println!(
+            "Chopped {} into {} Logs in {:.2?}",
+            &args.input,
+            timber.len(),
+            shift_duration
+        );
     }
-
-    // // Create output directory if it does not exist
-    // let mill = manage_destination(&args.input);
-    //
-    // if args.paragraph {
-    //     split_lumber(&args.input, timber.clone(), mill)
-    // } else {
-        // chop_lumber(&args.input, timber.clone(), mill);
-    // }
-    //
-    // // Finish Benchmarking Timer
-    // let shift_duration = shift_start.elapsed();
-    // println!(
-    //     "Chopped {} into {} Logs in {:.2?}",
-    //     &args.input,
-    //     timber.len(),
-    //     shift_duration
-    // );
 
     ExitCode::from(0)
 }

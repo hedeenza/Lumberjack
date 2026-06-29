@@ -68,6 +68,7 @@ pub fn paragraph_forest(forest: &mut [String]) -> Vec<Vec<(usize, String)>> {
                     }
                     pointer1_index = pointer2_index;
                     break
+                // Troubleshooting the "not including the final line" issue
                 // } else if pointer2_index == forest.len() - 1 {
                 //     let mut line_index = pointer1_index;
                 //     for line in &mut forest[pointer1_index..=pointer2_index] {
@@ -157,4 +158,35 @@ pub fn chop_lumber(input_file: &str, timber: Vec<&[String]>, mill: String) {
 }
 
 pub fn split_lumber(input_file: &str, timber: Vec<Vec<(usize, String)>>, mill: String) {
+    for log in timber {
+        // Find the paragraph line start and end values
+        let mut line_start = log[0].0.clone();
+        let mut line_end = log[0].0.clone();
+        for ring in &log {
+            if ring.0 < line_start {
+                line_start = ring.0;
+            }
+            if ring.0 > line_end {
+                line_end = ring.0;
+            }
+        }
+        // Find the position of the period in the input file name, if there is one
+        let period_index = match input_file.find(".") {
+            Some(index) => index,
+            None => input_file.len(),
+        };
+        // The output name is everything up to the period index
+        let input_name = &input_file[..period_index];
+        // The output extension is everything after and including the period index
+        let input_extension = &input_file[period_index..];
+        // Format the output name to include the original file name, the included line range
+        // adjusted to a 1-index, and original extension if there was one
+        let output_file = format!("{}_{}-{}{}", input_name, line_start + 1, line_end + 1, input_extension);
+        // Create the output file
+        let mut final_output =
+            File::create(mill.clone() + &output_file).expect("Failed to Create Output File");
+        for ring in log {
+            let _ = writeln!(final_output, "{}", ring.1);
+        }
+    }
 }

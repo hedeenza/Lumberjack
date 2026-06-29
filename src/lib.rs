@@ -41,6 +41,57 @@ pub fn size_forest<'a>(input_size: &'a usize, forest: &'a [String]) -> Vec<&'a [
     timber
 }
 
+pub fn paragraph_forest(forest: &mut [String]) -> Vec<Vec<(usize, String)>> {
+
+    // Createa a new vector to hold the Vec<Tuple>
+    let mut timber: Vec<Vec<(usize, String)>> = Vec::new();
+
+    // Set the initial Pointer 1 index to the beginning
+    let mut pointer1_index = 0;
+
+    // While the Pointer 1 index is less than the length of the content vector...
+    while pointer1_index < forest.len() {
+        // If Pointer 1 hits a line with content in it...
+        if forest[pointer1_index].trim() != String::from("") {
+            // Create a new vector to hold the (index, line-content) tuples
+            let mut tuple_vector: Vec<(usize, String)> = Vec::new();
+            // Set Pointer 2 to where Pointer 1 is
+            let mut pointer2_index = pointer1_index;
+            // While the Pointer 2 index is less than the length of the content vector...
+            while pointer2_index < forest.len() {
+                // If Pointer 2 hits a blank line...
+                if forest[pointer2_index].trim() == String::from("") {
+                    for line in &mut forest[pointer1_index..pointer2_index] {
+                        let tuple: (usize, String) = (pointer1_index, line.to_string());
+                        tuple_vector.push(tuple);
+                        pointer1_index += 1;
+                    }
+                    pointer1_index = pointer2_index;
+                    break
+                // } else if pointer2_index == forest.len() - 1 {
+                //     let mut line_index = pointer1_index;
+                //     for line in &mut forest[pointer1_index..=pointer2_index] {
+                //         let tuple: (usize, String) = (line_index, line.to_string());
+                //         tuple_vector.push(tuple);
+                //         line_index += 1;
+                //     }
+                //     pointer1_index = pointer2_index;
+                //     println!("LAST LINE: {}", forest[pointer2_index]);
+                //     break
+                }
+                // Increment Pointer 2 by One
+                pointer2_index += 1;
+            }
+            // Push the tuple vector to the output vector
+            timber.push(tuple_vector);
+        }
+        // Increment Pointer 1 by One
+        pointer1_index += 1;
+    }
+
+    timber
+}
+
 pub fn manage_destination(input_file: &str) -> String {
     // Create a directory to hold the output
     // Find the position of the period in the input file name, if there is one
@@ -103,4 +154,7 @@ pub fn chop_lumber(input_file: &str, timber: Vec<&[String]>, mill: String) {
         // Set i to j so the next loop starts where this one ended
         i = j
     }
+}
+
+pub fn split_lumber(input_file: &str, timber: Vec<Vec<(usize, String)>>, mill: String) {
 }

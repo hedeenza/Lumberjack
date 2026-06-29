@@ -1,5 +1,5 @@
 use clap::Parser;
-use lumberjack::{chop_lumber, manage_destination, read_to_vec, size_forest};
+use lumberjack::{chop_lumber, manage_destination, paragraph_forest, read_to_vec, size_forest, split_lumber};
 use std::process::ExitCode;
 use std::time::Instant;
 
@@ -27,12 +27,15 @@ fn main() -> ExitCode {
     let args = Options::parse();
 
     // Read input, collect lines to vector
-    let forest = read_to_vec(&args.input);
+    let mut forest = read_to_vec(&args.input);
 
     // Chunk vector into desired size
     if args.paragraph {
-        // let timber = paragraph_forest(&forest);
+        let timber = paragraph_forest(&mut forest);
         println!("PARAGRAPH MODE");
+        for paragraph in timber {
+            println!("{:?}", paragraph);
+        }
     } else {
         println!("LINE MODE");
         // let timber = size_forest(&args.lines, &forest);
@@ -41,7 +44,11 @@ fn main() -> ExitCode {
     // // Create output directory if it does not exist
     // let mill = manage_destination(&args.input);
     //
-    // chop_lumber(&args.input, timber.clone(), mill);
+    // if args.paragraph {
+    //     split_lumber(&args.input, timber.clone(), mill)
+    // } else {
+        // chop_lumber(&args.input, timber.clone(), mill);
+    // }
     //
     // // Finish Benchmarking Timer
     // let shift_duration = shift_start.elapsed();

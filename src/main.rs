@@ -10,9 +10,13 @@ struct Options {
     #[arg(short, long)]
     input: String,
 
-    /// The number of lines per chunk
-    #[arg(short, long)]
+    /// The number of lines per chunk [default = 1]
+    #[arg(short, long, default_value_t = 1)]
     lines: usize,
+
+    /// Use paragraph mode to divide by paragraph breaks rather than line count
+    #[arg(short, long)]
+    paragraph: bool,
 }
 
 fn main() -> ExitCode {
@@ -26,21 +30,27 @@ fn main() -> ExitCode {
     let forest = read_to_vec(&args.input);
 
     // Chunk vector into desired size
-    let timber = size_forest(&args.lines, &forest);
+    if args.paragraph {
+        // let timber = paragraph_forest(&forest);
+        println!("PARAGRAPH MODE");
+    } else {
+        println!("LINE MODE");
+        // let timber = size_forest(&args.lines, &forest);
+    }
 
-    // Create output directory if it does not exist
-    let mill = manage_destination(&args.input);
-
-    chop_lumber(&args.input, timber.clone(), mill);
-
-    // Finish Benchmarking Timer
-    let shift_duration = shift_start.elapsed();
-    println!(
-        "Chopped {} into {} Logs in {:.2?}",
-        &args.input,
-        timber.len(),
-        shift_duration
-    );
+    // // Create output directory if it does not exist
+    // let mill = manage_destination(&args.input);
+    //
+    // chop_lumber(&args.input, timber.clone(), mill);
+    //
+    // // Finish Benchmarking Timer
+    // let shift_duration = shift_start.elapsed();
+    // println!(
+    //     "Chopped {} into {} Logs in {:.2?}",
+    //     &args.input,
+    //     timber.len(),
+    //     shift_duration
+    // );
 
     ExitCode::from(0)
 }

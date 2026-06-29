@@ -12,10 +12,11 @@ For when you want to chop large text files into even pieces.
 - macOS users will need to compile from source.
 
 ## Running the CLI
-`$ ./lumberjack -i <INPUT FILE> -l <LINES PER FILE>`
+`$ ./lumberjack -i <INPUT FILE>`
 
 - `--input / -i`: The name of the input file.
-- `--lines / -l`: The number of lines per file.
+- `--lines / -l`: The number of lines per file, [default: 1].
+- `--paragraph / -p`: Activate "Paragraph Mode" where the input file is broken up according to paragraph breaks, variable lines per file.
 - `wc -l <Input File>` counts the number of lines in a file, and may be a useful command to use in conjunction with this tool.
 - Ensure the program has executable permissions.
 

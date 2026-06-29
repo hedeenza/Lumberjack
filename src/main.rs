@@ -10,7 +10,7 @@ struct Options {
     #[arg(short, long)]
     input: String,
 
-    /// The number of lines per chunk [default = 1]
+    /// The number of lines per chunk
     #[arg(short, long, default_value_t = 1)]
     lines: usize,
 

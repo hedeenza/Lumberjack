@@ -93,7 +93,7 @@ pub fn paragraph_forest(forest: &mut [String]) -> Vec<Vec<(usize, String)>> {
     timber
 }
 
-pub fn manage_destination(input_file: &str) -> String {
+pub fn manage_destination(input_file: &str, paragraph_mode: bool) -> String {
     // Create a directory to hold the output
     // Find the position of the period in the input file name, if there is one
     let period_index = match input_file.find(".") {
@@ -103,8 +103,15 @@ pub fn manage_destination(input_file: &str) -> String {
     // The output name is everything up to the period index
     let input_name = &input_file[..period_index];
 
+    let suffix;
+    if paragraph_mode {
+        suffix = String::from("_split/");
+    } else {
+        suffix = String::from("_chopped/");
+    }
+
     // Destination directory includes the input file name for ease of location
-    let mill = String::from("./") + input_name + &String::from("_chopped/");
+    let mill = String::from("./") + input_name + &suffix;
 
     // If the directory already exists, do nothing
     if Path::new(&mill).exists() {

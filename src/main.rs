@@ -27,7 +27,7 @@ fn main() -> ExitCode {
     let args = Options::parse();
 
     // Create output directory if it does not exist
-    let mill = manage_destination(&args.input);
+    let mill = manage_destination(&args.input, args.paragraph);
 
     // Read input, collect lines to vector
     let mut forest = read_to_vec(&args.input);
@@ -39,7 +39,7 @@ fn main() -> ExitCode {
         // Finish Benchmarking Timer
         let shift_duration = shift_start.elapsed();
         println!(
-            "Chopped {} into {} Logs in {:.2?}",
+            "Split {} into {} Logs in {:.2?}",
             &args.input,
             timber.len(),
             shift_duration
